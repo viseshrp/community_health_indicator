@@ -30,6 +30,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.ssdifall2016.communityhealthindicator.R;
+import com.ssdifall2016.communityhealthindicator.utils.AppConstants;
+import com.ssdifall2016.communityhealthindicator.utils.ValidationUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -162,18 +164,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+        if (ValidationUtils.checkValidity(password, AppConstants.DATA_TYPE_PASSWORD, this)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
         }
 
         // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
-            cancel = true;
-        } else if (!isEmailValid(email)) {
+        if (ValidationUtils.checkValidity(email, AppConstants.DATA_TYPE_EMAIL, this)) {
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancel = true;
@@ -190,16 +188,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
         }
-    }
-
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
-    }
-
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
     }
 
     /**

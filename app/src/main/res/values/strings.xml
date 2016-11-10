@@ -14,4 +14,5 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="error_enter_all_details">Please make sure you haven\'t left any field blank.</string>
 </resources>
