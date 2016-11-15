@@ -10,4 +10,7 @@ package com.ssdifall2016.communityhealthindicator.utils;
 
 public class APIConstants {
     public static String BASE_URL = ""; //base-url goes here
+
+    public static String LOGIN_URL = BASE_URL + "/api/users/Login/";
+
 }
