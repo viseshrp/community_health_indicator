@@ -19,7 +19,7 @@ public class ValidationUtils {
         /* Validating empty field */
         if (data.isEmpty()) {
 
-            MessageUtils.displayToast(mContext, R.string.error_enter_all_details);
+            MsgUtils.displayToast(mContext, R.string.error_enter_all_details);
             isDataValid = false;
 
             /* Validating Email */
@@ -28,13 +28,13 @@ public class ValidationUtils {
                 if (checkEmailValidity(data)) {
                     isDataValid = true;
                 } else {
-                    MessageUtils.displayToast(mContext, mContext.getResources().getString(R.string.error_invalid_email));
+                    MsgUtils.displayToast(mContext, mContext.getResources().getString(R.string.error_invalid_email));
                     isDataValid = false;
                 }
             /* Validating Password */
             } else if (dataType == AppConstants.DATA_TYPE_PASSWORD) {
                 if (data.length() < AppConstants.PASSWORD_MIN_CHARACTER_COUNT) {
-                    MessageUtils.displayToast(mContext, mContext.getResources().getString(R.string.error_invalid_password) + " Enter at least " + String.valueOf(AppConstants.PASSWORD_MIN_CHARACTER_COUNT) + " characters.");
+                    MsgUtils.displayToast(mContext, mContext.getResources().getString(R.string.error_invalid_password) + " Enter at least " + String.valueOf(AppConstants.PASSWORD_MIN_CHARACTER_COUNT) + " characters.");
                     isDataValid = false;
                 } else {
                     isDataValid = true;

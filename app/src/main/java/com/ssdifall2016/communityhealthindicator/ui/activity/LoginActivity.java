@@ -3,6 +3,8 @@ package com.ssdifall2016.communityhealthindicator.ui.activity;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -29,9 +31,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.android.volley.error.VolleyError;
+import com.ssdifall2016.communityhealthindicator.CHIApp;
 import com.ssdifall2016.communityhealthindicator.R;
+import com.ssdifall2016.communityhealthindicator.models.HealthOfficial;
 import com.ssdifall2016.communityhealthindicator.utils.AppConstants;
+import com.ssdifall2016.communityhealthindicator.utils.MsgUtils;
+import com.ssdifall2016.communityhealthindicator.utils.NetworkErrorHandler;
+import com.ssdifall2016.communityhealthindicator.utils.NetworkUtil;
+import com.ssdifall2016.communityhealthindicator.utils.UserSessionUtils;
 import com.ssdifall2016.communityhealthindicator.utils.ValidationUtils;
+
+import org.xml.sax.ErrorHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +78,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
 
+    private ProgressDialog progressDialog;
+
+    private boolean isSuccess;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +112,36 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+    }
+
+    public void showProgressDialog(String message) {
+        String msg;
+        if (message == null) {
+            msg = getString(R.string.progress_dialog_loading_text);
+        } else {
+            msg = message;
+        }
+
+        progressDialog = ProgressDialog.show(this, null, msg, true);
+    }
+
+    public void showProgressDialog(String message, boolean dismissable) {
+        String msg;
+        if (message == null) {
+            msg = getString(R.string.progress_dialog_loading_text);
+        } else {
+            msg = message;
+        }
+
+        progressDialog = ProgressDialog.show(this, null, msg, true, dismissable, null);
+    }
+
+    public void dismissProgressDialog() {
+        if (this.isFinishing()) return;
+
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
     }
 
     private void populateAutoComplete() {
@@ -149,7 +195,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     private void attemptLogin() {
         if (mAuthTask != null) {
-
+            return;
         }
 
         // Reset errors.
@@ -164,14 +210,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        if (ValidationUtils.checkValidity(password, AppConstants.DATA_TYPE_PASSWORD, this)) {
+        if (!ValidationUtils.checkValidity(password, AppConstants.DATA_TYPE_PASSWORD, this)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
         }
 
         // Check for a valid email address.
-        if (ValidationUtils.checkValidity(email, AppConstants.DATA_TYPE_EMAIL, this)) {
+        if (!ValidationUtils.checkValidity(email, AppConstants.DATA_TYPE_EMAIL, this)) {
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancel = true;
@@ -297,14 +343,42 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
-
+            isSuccess = false;
             try {
                 // Simulate network access.
+                if (NetworkUtil.getConnectivityStatusString(LoginActivity.this)) {
+                    showProgressDialog(getString(R.string.message_login_processing));
+                    CHIApp.get().getmChiApi().login(mEmail,
+                            mPassword, new Response.Listener<HealthOfficial>() {
+                                @Override
+                                public void onResponse(HealthOfficial response) {
+                                    if (response != null) {
+                                        dismissProgressDialog();
+                                        if (response.getStatus().equals(AppConstants.SUCCESS)) {
+                                            isSuccess = true;
+                                            MsgUtils.displayToast(LoginActivity.this, R.string.message_welcome);
+                                            saveData(response);
+                                        } else {
+                                            MsgUtils.displayToast(LoginActivity.this, response.getMessage());
+                                        }
+                                    }
+                                }
+                            }, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    dismissProgressDialog();
+                                    NetworkErrorHandler.handleLoginError(LoginActivity.this, error.networkResponse.statusCode);
+                                }
+                            });
+                } else {
+                    MsgUtils.displayToast(LoginActivity.this, getString(R.string.error_internet_unavailable));
+                }
+
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 return false;
             }
-
+/*
             for (String credential : DUMMY_CREDENTIALS) {
                 String[] pieces = credential.split(":");
                 if (pieces[0].equals(mEmail)) {
@@ -312,9 +386,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     return pieces[1].equals(mPassword);
                 }
             }
+*/
 
             // TODO: register the new account here.
-            return true;
+            return isSuccess;
+        }
+
+        private void saveData(HealthOfficial response) {
+            UserSessionUtils.saveStudentLoginData(LoginActivity.this, response);
         }
 
         @Override
@@ -323,6 +402,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
+                //TODO : replace with the main activity when available.
+                startActivity(new Intent(LoginActivity.this, LoginActivity.class));
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

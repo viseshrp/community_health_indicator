@@ -15,4 +15,11 @@
         completions."
     </string>
     <string name="error_enter_all_details">Please make sure you haven\'t left any field blank.</string>
+    <string name="progress_dialog_loading_text">Loading&#8230;</string>
+    <string name="message_login_processing">Logging you in&#8230;</string>
+    <string name="message_welcome">Welcome</string>
+    <string name="error_internet_unavailable">Please check your internet connection and try again.</string>
+    <string name="error_authentication">Authentication error : Incorrect username or password.</string>
+    <string name="error_generic">Something went wrong. Please try again later.</string>
+
 </resources>
