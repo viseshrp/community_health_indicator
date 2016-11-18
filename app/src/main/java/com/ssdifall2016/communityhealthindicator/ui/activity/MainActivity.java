@@ -17,8 +17,6 @@ import android.widget.TextView;
 
 import com.ssdifall2016.communityhealthindicator.R;
 
-import butterknife.BindView;
-
 public class MainActivity extends AppCompatActivity {
 
     /**
@@ -34,30 +32,24 @@ public class MainActivity extends AppCompatActivity {
     /**
      * The {@link ViewPager} that will host the section contents.
      */
-    @BindView(R.id.container)
     private ViewPager mViewPager;
-
-    @BindView(R.id.toolbar)
-    private Toolbar toolbar;
-
-    @BindView(R.id.tabs)
-    private TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
+        mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-//        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
     }
@@ -112,10 +104,17 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-            return rootView;
+
+            if (getArguments().getInt(ARG_SECTION_NUMBER) == 1) {
+                return inflater.inflate(R.layout.fragment_county, container, false);
+            } else if (getArguments().getInt(ARG_SECTION_NUMBER) == 2) {
+                return inflater.inflate(R.layout.fragment_disease, container, false);
+            } else {
+                View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+                TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+                textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+                return rootView;
+            }
         }
     }
 
