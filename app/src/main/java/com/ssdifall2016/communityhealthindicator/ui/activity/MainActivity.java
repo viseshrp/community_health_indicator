@@ -1,5 +1,6 @@
 package com.ssdifall2016.communityhealthindicator.ui.activity;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -33,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,4 +156,35 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
     }
+
+    public void showProgressDialog(String message) {
+        String msg;
+        if (message == null) {
+            msg = getString(R.string.progress_dialog_loading_text);
+        } else {
+            msg = message;
+        }
+
+        progressDialog = ProgressDialog.show(this, null, msg, true);
+    }
+
+    public void showProgressDialog(String message, boolean dismissable) {
+        String msg;
+        if (message == null) {
+            msg = getString(R.string.progress_dialog_loading_text);
+        } else {
+            msg = message;
+        }
+
+        progressDialog = ProgressDialog.show(this, null, msg, true, dismissable, null);
+    }
+
+    public void dismissProgressDialog() {
+        if (this.isFinishing()) return;
+
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+
 }
