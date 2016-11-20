@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -20,6 +21,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -79,6 +81,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mLoginFormView;
 
     private ProgressDialog progressDialog;
+    protected Toolbar mToolbar;
 
     private boolean isSuccess;
 
@@ -86,6 +89,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        mToolbar = (Toolbar) findViewById(R.id.toolbar_login);
+        if (mToolbar != null) {
+            setSupportActionBar(mToolbar);
+            mToolbar.setTitleTextColor(ContextCompat.getColor(this, android.R.color.white));
+        }
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -112,6 +122,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //mToolbar.setTitle("Sign in");
     }
 
     public void showProgressDialog(String message) {
@@ -347,13 +363,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             try {
                 // Simulate network access.
                 if (NetworkUtil.getConnectivityStatusString(LoginActivity.this)) {
-                    showProgressDialog(getString(R.string.message_login_processing));
+                    //showProgressDialog(getString(R.string.message_login_processing));
                     CHIApp.get().getmChiApi().login(mEmail,
                             mPassword, new Response.Listener<HealthOfficial>() {
                                 @Override
                                 public void onResponse(HealthOfficial response) {
                                     if (response != null) {
-                                        dismissProgressDialog();
+                                        //dismissProgressDialog();
                                         if (response.getStatus().equals(AppConstants.SUCCESS)) {
                                             isSuccess = true;
                                             MsgUtils.displayToast(LoginActivity.this, R.string.message_welcome);
@@ -366,7 +382,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                             }, new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
-                                    dismissProgressDialog();
+                                    //dismissProgressDialog();
                                     NetworkErrorHandler.handleLoginError(LoginActivity.this, error.networkResponse.statusCode);
                                 }
                             });
