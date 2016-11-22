@@ -15,5 +15,6 @@ public class UserSessionUtils {
         PreferencesUtils.setString(mContext, AppConstants.USER_LAST_NAME, response.getLast_name());
         PreferencesUtils.setString(mContext, AppConstants.MAPPED_COUNTY, response.getMappedCounty());
         PreferencesUtils.setString(mContext, AppConstants.MAPPED_DISEASE, response.getMappedDisease());
+        PreferencesUtils.setBoolean(mContext, AppConstants.IS_LOGGED_IN, true);
     }
 }

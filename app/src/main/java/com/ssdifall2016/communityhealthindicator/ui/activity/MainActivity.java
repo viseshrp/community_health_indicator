@@ -1,6 +1,7 @@
 package com.ssdifall2016.communityhealthindicator.ui.activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ssdifall2016.communityhealthindicator.R;
+import com.ssdifall2016.communityhealthindicator.utils.AppConstants;
+import com.ssdifall2016.communityhealthindicator.utils.PreferencesUtils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -60,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_main_activity, menu);
         return true;
     }
 
@@ -72,11 +75,21 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_logout) {
+            //// TODO: 11/21/16 check default values later. 
+            if(PreferencesUtils.getBoolean(MainActivity.this, AppConstants.IS_LOGGED_IN, true))
+                logout();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void logout() {
+        PreferencesUtils.resetAll(MainActivity.this);
+        startActivity(new Intent(MainActivity.this, SplashActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                Intent.FLAG_ACTIVITY_NEW_TASK));
+        finish();
     }
 
     /**

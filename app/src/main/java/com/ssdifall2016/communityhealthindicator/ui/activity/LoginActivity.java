@@ -127,7 +127,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onResume() {
         super.onResume();
-        //mToolbar.setTitle("Sign in");
+        mToolbar.setTitle(CHIApp.get().getString(R.string.title_activity_sign_in));
     }
 
     public void showProgressDialog(String message) {

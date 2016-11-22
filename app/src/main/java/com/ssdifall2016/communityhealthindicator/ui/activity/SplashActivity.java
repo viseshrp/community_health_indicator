@@ -5,6 +5,8 @@ import android.content.Intent;
 import com.daimajia.androidanimations.library.Techniques;
 import com.ssdifall2016.communityhealthindicator.CHIApp;
 import com.ssdifall2016.communityhealthindicator.R;
+import com.ssdifall2016.communityhealthindicator.utils.AppConstants;
+import com.ssdifall2016.communityhealthindicator.utils.PreferencesUtils;
 import com.viksaa.sssplash.lib.activity.AwesomeSplash;
 import com.viksaa.sssplash.lib.cnst.Flags;
 import com.viksaa.sssplash.lib.model.ConfigSplash;
@@ -45,15 +47,22 @@ public class SplashActivity extends AwesomeSplash {
         configSplash.setTitleSplash(CHIApp.get().getString(R.string.app_name));
         configSplash.setTitleTextColor(R.color.colorAccent);
         configSplash.setTitleTextSize(30f); //float value
-        configSplash.setAnimTitleDuration(3000);
-        configSplash.setAnimTitleTechnique(Techniques.FlipInX);
+        configSplash.setAnimTitleDuration(5000);
+        configSplash.setAnimTitleTechnique(Techniques.FadeInDown);
         //configSplash.setTitleFont("fonts/myfont.ttf"); //provide string to your font located in assets/fonts/
 
     }
 
     @Override
     public void animationsFinished() {
-        startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+        //// TODO: 11/21/16 check default values later.
+        Intent intent = null;
+        if (PreferencesUtils.getBoolean(SplashActivity.this, AppConstants.IS_LOGGED_IN, false)) {
+            intent = new Intent(SplashActivity.this, MainActivity.class);
+        } else {
+            intent = new Intent(SplashActivity.this, LoginActivity.class);
+        }
+        startActivity(intent);
         finish();
     }
 }

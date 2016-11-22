@@ -26,5 +26,7 @@ public class AppConstants {
     public static final String SELECTED_DISEASE = "selected_disease";
     public static final String SELECTED_COUNTY = "selected_county";
 
+    public static final String IS_LOGGED_IN = "is_logged_in";
+
 
 }
