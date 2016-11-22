@@ -42,6 +42,7 @@ import com.ssdifall2016.communityhealthindicator.utils.AppConstants;
 import com.ssdifall2016.communityhealthindicator.utils.MsgUtils;
 import com.ssdifall2016.communityhealthindicator.utils.NetworkErrorHandler;
 import com.ssdifall2016.communityhealthindicator.utils.NetworkUtil;
+import com.ssdifall2016.communityhealthindicator.utils.PreferencesUtils;
 import com.ssdifall2016.communityhealthindicator.utils.UserSessionUtils;
 import com.ssdifall2016.communityhealthindicator.utils.ValidationUtils;
 
@@ -372,7 +373,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                         //dismissProgressDialog();
                                         if (response.getStatus().equals(AppConstants.SUCCESS)) {
                                             isSuccess = true;
-                                            MsgUtils.displayToast(LoginActivity.this, R.string.message_welcome);
+                                            MsgUtils.displayToast(LoginActivity.this, R.string.message_welcome + " " + response.getFirst_name());
                                             saveData(response);
                                         } else {
                                             MsgUtils.displayToast(LoginActivity.this, response.getMessage());
@@ -419,8 +420,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             if (success) {
                 //TODO : replace with the main activity when available.
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                finish();
+                if (PreferencesUtils.getBoolean(LoginActivity.this, AppConstants.IS_LOGGED_IN, false)) {
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    finish();
+                } else {
+                    MsgUtils.displayToast(LoginActivity.this, "There was an error while logging you in.");
+                }
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();

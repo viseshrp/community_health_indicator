@@ -43,6 +43,15 @@ public class SplashActivity extends AwesomeSplash {
         configSplash.setPathSplashFillColor(R.color.materialRed); //path object filling color
 
 
+        //TODO : Alternative if animationsFinished doesnt do the login check.
+/*
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+            }
+        }, SPLASH_TIME);
+*/
+
         //Customize Title
         configSplash.setTitleSplash(CHIApp.get().getString(R.string.app_name));
         configSplash.setTitleTextColor(R.color.colorAccent);
