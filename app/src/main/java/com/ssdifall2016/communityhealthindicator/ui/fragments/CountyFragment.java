@@ -97,7 +97,6 @@ public class CountyFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), InfoActivity.class);
                 intent.putExtra(AppConstants.SELECTED_DISEASE, disease);
                 startActivity(intent);
-                getActivity().finish();
             }
         });
         mDiseaseListRV.setAdapter(diseaseSelectorAdapter);
