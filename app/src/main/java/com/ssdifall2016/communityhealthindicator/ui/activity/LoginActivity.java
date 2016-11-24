@@ -22,7 +22,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -40,13 +40,10 @@ import com.ssdifall2016.communityhealthindicator.R;
 import com.ssdifall2016.communityhealthindicator.models.HealthOfficial;
 import com.ssdifall2016.communityhealthindicator.utils.AppConstants;
 import com.ssdifall2016.communityhealthindicator.utils.MsgUtils;
-import com.ssdifall2016.communityhealthindicator.utils.NetworkErrorHandler;
 import com.ssdifall2016.communityhealthindicator.utils.NetworkUtil;
 import com.ssdifall2016.communityhealthindicator.utils.PreferencesUtils;
 import com.ssdifall2016.communityhealthindicator.utils.UserSessionUtils;
 import com.ssdifall2016.communityhealthindicator.utils.ValidationUtils;
-
-import org.xml.sax.ErrorHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -359,32 +356,31 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Boolean doInBackground(Void... params) {
+
             // TODO: attempt authentication against a network service.
             isSuccess = false;
             try {
                 // Simulate network access.
                 if (NetworkUtil.getConnectivityStatusString(LoginActivity.this)) {
-                    //showProgressDialog(getString(R.string.message_login_processing));
                     CHIApp.get().getmChiApi().login(mEmail,
                             mPassword, new Response.Listener<HealthOfficial>() {
                                 @Override
                                 public void onResponse(HealthOfficial response) {
                                     if (response != null) {
-                                        //dismissProgressDialog();
-                                        if (response.getStatus().equals(AppConstants.SUCCESS)) {
+                                        //if (response.getStatus().equals(AppConstants.SUCCESS)) {
                                             isSuccess = true;
+                                            Log.e("success","success");
                                             MsgUtils.displayToast(LoginActivity.this, R.string.message_welcome + " " + response.getFirst_name());
                                             saveData(response);
-                                        } else {
+                                        /*} else {
                                             MsgUtils.displayToast(LoginActivity.this, response.getMessage());
-                                        }
+                                        }*/
                                     }
                                 }
                             }, new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
-                                    //dismissProgressDialog();
-                                    NetworkErrorHandler.handleLoginError(LoginActivity.this, error.networkResponse.statusCode);
+                                    MsgUtils.displayToast(LoginActivity.this, R.string.error_generic);
                                 }
                             });
                 } else {

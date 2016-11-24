@@ -2,6 +2,7 @@ package com.ssdifall2016.communityhealthindicator;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.RequestTickle;
@@ -24,7 +25,7 @@ public class CHIApp extends Application {
 
     private CHIApi mChiApi;
 
-    public static CHIApp get(){
+    public static CHIApp get() {
         if (mChiApp == null) {
             System.exit(0);
         }
@@ -36,6 +37,9 @@ public class CHIApp extends Application {
         super.onCreate();
         mContext = this;
         mChiApp = this;
+
+        setupNetwork();
+        setupApi();
     }
 
     public CHIApi getmChiApi() {
