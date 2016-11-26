@@ -42,7 +42,7 @@ public class DiseaseFragment extends Fragment {
     @BindView(R.id.no_internet_layout)
     RelativeLayout mNoInternetLayout;
 
-    private int mappedDiseaseId;
+    private String mappedDiseaseId;
 
     private CountySelectorAdapter countySelectorAdapter;
 
@@ -64,7 +64,7 @@ public class DiseaseFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mappedDiseaseId = PreferencesUtils.getInt(getActivity(), AppConstants.MAPPED_DISEASE, 1); //// TODO: 11/24/16 change later
+        mappedDiseaseId = PreferencesUtils.getString(getActivity(), AppConstants.MAPPED_DISEASE_ID, ""); //// TODO: 11/24/16 change later
 
 /*
         if (getArguments() != null) {

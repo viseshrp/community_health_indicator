@@ -15,10 +15,10 @@ public class HealthOfficial extends User {
     private String mappedDisease;
 
     @SerializedName("mapped_county_id")
-    private int mappedCountyId;
+    private String mappedCountyId;
 
     @SerializedName("mapped_disease_id")
-    private int mappedDiseaseId;
+    private String mappedDiseaseId;
 
     public String getMappedCounty() {
         return mappedCounty;
@@ -36,19 +36,19 @@ public class HealthOfficial extends User {
         this.mappedDisease = mappedDisease;
     }
 
-    public int getMappedCountyId() {
+    public String getMappedCountyId() {
         return mappedCountyId;
     }
 
-    public void setMappedCountyId(int mappedCountyId) {
+    public void setMappedCountyId(String mappedCountyId) {
         this.mappedCountyId = mappedCountyId;
     }
 
-    public int getMappedDiseaseId() {
+    public String getMappedDiseaseId() {
         return mappedDiseaseId;
     }
 
-    public void setMappedDiseaseId(int mappedDiseaseId) {
+    public void setMappedDiseaseId(String mappedDiseaseId) {
         this.mappedDiseaseId = mappedDiseaseId;
     }
 }
