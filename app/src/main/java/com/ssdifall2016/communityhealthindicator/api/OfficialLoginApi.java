@@ -17,7 +17,7 @@ import java.nio.charset.Charset;
 public class OfficialLoginApi extends AppRequest<HealthOfficial> {
 
     public OfficialLoginApi(String userName, String password, Response.Listener<HealthOfficial> listener, Response.ErrorListener errorListener) {
-        super(Method.GET, "http://172.73.154.11:8002/login/" + userName + "/" + password + "/", listener, errorListener);
+        super(Method.GET, "http://172.73.154.11:8080/login/" + userName + "/" + password + "/", listener, errorListener);
         setShouldCache(false);
         setPriority(Priority.IMMEDIATE);
 

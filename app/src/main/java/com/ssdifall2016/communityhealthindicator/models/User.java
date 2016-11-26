@@ -7,12 +7,6 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class User extends BaseModel {
-    @SerializedName("jwt_payload")
-    private String jwt_payload;
-
-    @SerializedName("username")
-    private String username;
-
     @SerializedName("first_name")
     private String first_name;
 
@@ -21,22 +15,6 @@ public class User extends BaseModel {
 
     @SerializedName("email")
     private String email;
-
-    public String getJwt_payload() {
-        return jwt_payload;
-    }
-
-    public void setJwt_payload(String jwt_payload) {
-        this.jwt_payload = jwt_payload;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
     public String getFirst_name() {
         return first_name;
