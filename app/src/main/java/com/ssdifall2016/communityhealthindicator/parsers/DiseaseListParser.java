@@ -3,6 +3,7 @@ package com.ssdifall2016.communityhealthindicator.parsers;
 import com.google.gson.Gson;
 import com.ssdifall2016.communityhealthindicator.models.County;
 import com.ssdifall2016.communityhealthindicator.models.Disease;
+import com.ssdifall2016.communityhealthindicator.models.DiseaseList;
 import com.ssdifall2016.communityhealthindicator.utils.BaseApiParser;
 
 /**
@@ -16,9 +17,9 @@ public class DiseaseListParser extends BaseApiParser {
     }
 
     @Override
-    public Disease getParserResponse() {
+    public DiseaseList getParserResponse() {
         Gson gson = new Gson();
-        return gson.fromJson(mResponse, Disease.class);
+        return gson.fromJson(mResponse, DiseaseList.class);
     }
 
 }

@@ -5,6 +5,7 @@ import com.android.volley.Response;
 import com.android.volley.error.AuthFailureError;
 import com.android.volley.error.NetworkError;
 import com.ssdifall2016.communityhealthindicator.models.County;
+import com.ssdifall2016.communityhealthindicator.models.CountyList;
 import com.ssdifall2016.communityhealthindicator.models.Disease;
 import com.ssdifall2016.communityhealthindicator.parsers.CountyListParser;
 import com.ssdifall2016.communityhealthindicator.parsers.DiseaseListParser;
@@ -16,22 +17,21 @@ import java.nio.charset.Charset;
  * Created by viseshprasad on 11/18/16.
  */
 
-public class getCountyListApi extends AppRequest<County> {
+public class getCountyListApi extends AppRequest<CountyList> {
 
-    public getCountyListApi(String email, String mapped_disease, Response.Listener<County> listener, Response.ErrorListener errorListener) {
-        super(Method.POST, APIConstants.GET_COUNTY_LIST_URL, listener, errorListener);
+    public getCountyListApi(int mapped_disease_id, Response.Listener<CountyList> listener, Response.ErrorListener errorListener) {
+        super(Method.GET, "http://172.73.154.11:8080/disease/" + mapped_disease_id + "/", listener, errorListener);
         setShouldCache(false);
         setPriority(Priority.IMMEDIATE);
 
-        setHttpParams("email", email);
-        setHttpParams("mapped_disease", mapped_disease);
+        setHttpParams("mapped_disease", String.valueOf(mapped_disease_id));
     }
 
     @Override
-    protected Response<County> parseNetworkResponse(NetworkResponse response) {
+    protected Response<CountyList> parseNetworkResponse(NetworkResponse response) {
         if (response.statusCode == 200) {
-            County county = new CountyListParser(new String(response.data, Charset.forName("UTF-8"))).getParserResponse();
-            return Response.success(county, null);
+            CountyList countyList = new CountyListParser(new String(response.data, Charset.forName("UTF-8"))).getParserResponse();
+            return Response.success(countyList, null);
         } else if (response.statusCode == 401) {
             return Response.error(new AuthFailureError());
         } else {

@@ -18,6 +18,8 @@ public class AppConstants {
     public static final String EMAIL = "email";
     public static final String MAPPED_COUNTY = "mapped_county";
     public static final String MAPPED_DISEASE = "mapped_disease";
+    public static final String MAPPED_COUNTY_ID = "mapped_county_id";
+    public static final String MAPPED_DISEASE_ID = "mapped_disease_id";
 
     /* Network response generic Constants */
     public static final String SUCCESS = "success";

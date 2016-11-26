@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
                 case 0:
                     return "COUNTY";
                 case 1:
-                    return "DISEASE";
+                    return "DISEASE INDICATOR";
 
             }
             return null;

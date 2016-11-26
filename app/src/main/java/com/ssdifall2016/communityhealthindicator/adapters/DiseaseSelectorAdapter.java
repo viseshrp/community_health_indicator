@@ -10,24 +10,27 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ssdifall2016.communityhealthindicator.R;
+import com.ssdifall2016.communityhealthindicator.models.Disease;
 
 import java.util.ArrayList;
 
 /**
  * Created by viseshprasad on 11/18/16.
  */
-    public class DiseaseSelectorAdapter extends RecyclerView.Adapter<DiseaseSelectorAdapter.ViewHolder> {
+
+public class DiseaseSelectorAdapter extends RecyclerView.Adapter<DiseaseSelectorAdapter.ViewHolder> {
 
     private final DiseaseTapListener mDiseaseTapListener;
-    private ArrayList<String> mDiseaseList = new ArrayList<>();
+    private ArrayList<Disease> mDiseaseList;
     private Context mContext;
 
     public DiseaseSelectorAdapter(Context mContext, DiseaseTapListener listener) {
+        mDiseaseList = new ArrayList<>();
         mDiseaseTapListener = listener;
         this.mContext = mContext;
     }
 
-    public void setDataset(ArrayList<String> diseaseList) {
+    public void setDataset(ArrayList<Disease> diseaseList) {
         this.mDiseaseList = diseaseList;
     }
 
@@ -40,9 +43,9 @@ import java.util.ArrayList;
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        final String disease = mDiseaseList.get(position);
+        final Disease disease = mDiseaseList.get(position);
 
-        holder.titleText.setText(disease);
+        holder.titleText.setText(disease.getDiseaseDescription());
         holder.wrapLayout.setId(position);
         holder.wrapLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,7 +66,7 @@ import java.util.ArrayList;
     }
 
     public interface DiseaseTapListener {
-        void onTap(String disease);
+        void onTap(Disease disease);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

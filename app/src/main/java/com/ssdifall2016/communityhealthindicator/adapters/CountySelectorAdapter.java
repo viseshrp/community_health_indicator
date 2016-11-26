@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ssdifall2016.communityhealthindicator.R;
+import com.ssdifall2016.communityhealthindicator.models.County;
 
 import java.util.ArrayList;
 
@@ -17,16 +18,18 @@ import java.util.ArrayList;
  */
 
 public class CountySelectorAdapter extends RecyclerView.Adapter<CountySelectorAdapter.ViewHolder> {
+
     private final CountySelectorAdapter.CountyTapListener mCountyTapListener;
-    private ArrayList<String> mCountyList = new ArrayList<>();
+    private ArrayList<County> mCountyList;
     private Context mContext;
 
     public CountySelectorAdapter(Context mContext, CountyTapListener listener) {
+        mCountyList = new ArrayList<>();
         mCountyTapListener = listener;
         this.mContext = mContext;
     }
 
-    public void setDataset(ArrayList<String> countyList) {
+    public void setDataset(ArrayList<County> countyList) {
         this.mCountyList = countyList;
     }
 
@@ -39,9 +42,9 @@ public class CountySelectorAdapter extends RecyclerView.Adapter<CountySelectorAd
     @Override
     public void onBindViewHolder(final CountySelectorAdapter.ViewHolder holder, final int position) {
 
-        final String county = mCountyList.get(position);
+        final County county = mCountyList.get(position);
 
-        holder.titleText.setText(county);
+        holder.titleText.setText(county.getCountyName());
         holder.wrapLayout.setId(position);
         holder.wrapLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,7 +63,7 @@ public class CountySelectorAdapter extends RecyclerView.Adapter<CountySelectorAd
     }
 
     public interface CountyTapListener {
-        void onTap(String county);
+        void onTap(County county);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

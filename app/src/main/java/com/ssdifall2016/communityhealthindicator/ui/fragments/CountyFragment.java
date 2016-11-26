@@ -20,6 +20,7 @@ import com.ssdifall2016.communityhealthindicator.CHIApp;
 import com.ssdifall2016.communityhealthindicator.R;
 import com.ssdifall2016.communityhealthindicator.adapters.DiseaseSelectorAdapter;
 import com.ssdifall2016.communityhealthindicator.models.Disease;
+import com.ssdifall2016.communityhealthindicator.models.DiseaseList;
 import com.ssdifall2016.communityhealthindicator.ui.activity.InfoActivity;
 import com.ssdifall2016.communityhealthindicator.ui.activity.MainActivity;
 import com.ssdifall2016.communityhealthindicator.utils.AppConstants;
@@ -43,7 +44,6 @@ public class CountyFragment extends Fragment {
     @BindView(R.id.no_internet_layout)
     RelativeLayout mNoInternetLayout;
 
-    private String userEmail;
     private String mappedCounty;
 
     private DiseaseSelectorAdapter diseaseSelectorAdapter;
@@ -66,8 +66,7 @@ public class CountyFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        userEmail = PreferencesUtils.getString(getActivity(), AppConstants.EMAIL, null);
-        mappedCounty = PreferencesUtils.getString(getActivity(), AppConstants.MAPPED_COUNTY, null);
+        mappedCounty = PreferencesUtils.getString(getActivity(), AppConstants.MAPPED_COUNTY, "Albany"); //// TODO: 11/24/16 change to null later
 
 /*
         if (getArguments() != null) {
@@ -93,9 +92,9 @@ public class CountyFragment extends Fragment {
         mDiseaseListRV.setLayoutManager(mLayoutManger);
         diseaseSelectorAdapter = new DiseaseSelectorAdapter(getActivity(), new DiseaseSelectorAdapter.DiseaseTapListener() {
             @Override
-            public void onTap(String disease) {
+            public void onTap(Disease disease) {
                 Intent intent = new Intent(getActivity(), InfoActivity.class);
-                intent.putExtra(AppConstants.SELECTED_DISEASE, disease);
+                intent.putExtra(AppConstants.SELECTED_DISEASE, disease.getDiseaseDescription());
                 startActivity(intent);
             }
         });
@@ -106,9 +105,9 @@ public class CountyFragment extends Fragment {
         if (NetworkUtil.getConnectivityStatusString(getActivity())) {
             enableNoInternetView(false);
             ((MainActivity) getActivity()).showProgressDialog(getString(R.string.progress_dialog_loading_text));
-            CHIApp.get().getmChiApi().getDiseaseListApi(userEmail, mappedCounty, new Response.Listener<Disease>() {
+            CHIApp.get().getmChiApi().getDiseaseListApi(mappedCounty, new Response.Listener<DiseaseList>() {
                 @Override
-                public void onResponse(Disease response) {
+                public void onResponse(DiseaseList response) {
                     ((MainActivity) getActivity()).dismissProgressDialog();
                     if (response != null && response.getDiseaseList() != null && !response.getDiseaseList().isEmpty()) {
                         showEmptyList(false);
@@ -157,7 +156,7 @@ public class CountyFragment extends Fragment {
         }
     }
 
-    private void setDataset(ArrayList<String> diseaseList) {
+    private void setDataset(ArrayList<Disease> diseaseList) {
         diseaseSelectorAdapter.setDataset(diseaseList);
         diseaseSelectorAdapter.notifyDataSetChanged();
     }
