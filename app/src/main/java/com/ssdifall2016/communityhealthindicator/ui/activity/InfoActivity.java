@@ -218,13 +218,13 @@ public class InfoActivity extends AppCompatActivity {
             Disease disease = new Disease();
             JSONObject listObject = resultArray.getJSONObject(i);
             disease.setLocation(listObject.getString("location"));
-            disease.setMappingDist(listObject.getInt("mappingDist"));
+            disease.setMappingDist(listObject.getString("mappingDist"));
             disease.setDiseaseDescription(listObject.getString("diseaseDescription").trim());
-            disease.setPercent(listObject.getInt("percent"));
+            disease.setPercent(listObject.getString("percent"));
             disease.setCountyName(listObject.getString("countyName"));
             disease.setMeasure(listObject.getString("measure"));
-            disease.setAvgNumDen(listObject.getInt("avgNumDen"));
-            disease.setEventCount(listObject.getInt("eventCount"));
+            disease.setAvgNumDen(listObject.getString("avgNumDen"));
+            disease.setEventCount(listObject.getString("eventCount"));
             disease.setIndDescription(listObject.getString("indDescription"));
 
             if (!diseaseArrayList.contains(disease))
@@ -262,10 +262,10 @@ public class InfoActivity extends AppCompatActivity {
 
                         //adding marker
 
-                        if (loc.getMappingDist() == 1) {
+                        if (Integer.parseInt(loc.getMappingDist()) == 1) {
                             marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
 
-                        } else if (loc.getMappingDist() == 2) {
+                        } else if (Integer.parseInt(loc.getMappingDist()) == 2) {
                             marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
 
                         } else {
@@ -299,10 +299,10 @@ public class InfoActivity extends AppCompatActivity {
 
                             //adding marker
 
-                            if (loc.getMappingDist() == 1) {
+                            if (Integer.parseInt(loc.getMappingDist()) == 1) {
                                 marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
 
-                            } else if (loc.getMappingDist() == 2) {
+                            } else if (Integer.parseInt(loc.getMappingDist()) == 2) {
                                 marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
 
                             } else {
@@ -344,7 +344,7 @@ public class InfoActivity extends AppCompatActivity {
 
             for (int i = 0; i < selectedDiseases.size(); i++) {
 
-                barEntries.add(new BarEntry((float) selectedDiseases.get(i).getMappingDist(), i));
+                barEntries.add(new BarEntry(Float.parseFloat(selectedDiseases.get(i).getMappingDist()), i));
             }
 
 

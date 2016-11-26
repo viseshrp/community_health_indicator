@@ -117,9 +117,9 @@ public class MainActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "COUNTY";
+                    return PreferencesUtils.getString(MainActivity.this, AppConstants.MAPPED_COUNTY, "");
                 case 1:
-                    return "DISEASE INDICATOR";
+                    return PreferencesUtils.getString(MainActivity.this, AppConstants.MAPPED_DISEASE, "");
 
             }
             return null;

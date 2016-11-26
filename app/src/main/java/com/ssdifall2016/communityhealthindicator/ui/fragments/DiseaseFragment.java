@@ -102,7 +102,7 @@ public class DiseaseFragment extends Fragment {
     private void downLoadCountyList() {
         if (NetworkUtil.getConnectivityStatusString(getActivity())) {
             enableNoInternetView(false);
-            ((MainActivity) getActivity()).showProgressDialog(getString(R.string.progress_dialog_loading_text));
+            ((MainActivity) getActivity()).showProgressDialog(getString(R.string.progress_dialog_loading_text), true);
             CHIApp.get().getmChiApi().getCountyListApi(mappedDiseaseId, new Response.Listener<CountyList>() {
                 @Override
                 public void onResponse(CountyList response) {

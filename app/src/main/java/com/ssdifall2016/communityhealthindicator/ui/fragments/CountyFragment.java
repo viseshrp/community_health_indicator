@@ -1,9 +1,7 @@
 package com.ssdifall2016.communityhealthindicator.ui.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -44,7 +42,7 @@ public class CountyFragment extends Fragment {
     @BindView(R.id.no_internet_layout)
     RelativeLayout mNoInternetLayout;
 
-    private String mappedCounty;
+    private String mappedCountyId;
 
     private DiseaseSelectorAdapter diseaseSelectorAdapter;
 
@@ -66,7 +64,7 @@ public class CountyFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mappedCounty = PreferencesUtils.getString(getActivity(), AppConstants.MAPPED_COUNTY, "Albany"); //// TODO: 11/24/16 change to null later
+        mappedCountyId = PreferencesUtils.getString(getActivity(), AppConstants.MAPPED_COUNTY_ID, ""); //// TODO: 11/24/16 change to null later
 
 /*
         if (getArguments() != null) {
@@ -104,8 +102,8 @@ public class CountyFragment extends Fragment {
     private void downLoadDiseaseList() {
         if (NetworkUtil.getConnectivityStatusString(getActivity())) {
             enableNoInternetView(false);
-            ((MainActivity) getActivity()).showProgressDialog(getString(R.string.progress_dialog_loading_text));
-            CHIApp.get().getmChiApi().getDiseaseListApi(mappedCounty, new Response.Listener<DiseaseList>() {
+            ((MainActivity) getActivity()).showProgressDialog(getString(R.string.progress_dialog_loading_text), true);
+            CHIApp.get().getmChiApi().getDiseaseListApi(mappedCountyId, new Response.Listener<DiseaseList>() {
                 @Override
                 public void onResponse(DiseaseList response) {
                     ((MainActivity) getActivity()).dismissProgressDialog();

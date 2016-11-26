@@ -9,8 +9,9 @@ import java.util.ArrayList;
  */
 
 //// TODO: 11/25/16 : inherit from county model instead
-public class Disease extends BaseModel {
+public class Disease extends County {
 
+/*
     @SerializedName("countyName")
     private String countyName;
 
@@ -109,4 +110,5 @@ public class Disease extends BaseModel {
     public void setMappingDist(int mappingDist) {
         this.mappingDist = mappingDist;
     }
+*/
 }

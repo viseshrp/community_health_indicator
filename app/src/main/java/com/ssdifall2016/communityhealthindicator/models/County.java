@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class County extends BaseModel {
 
     @SerializedName("percent")
-    private int percent;
+    private String percent;
 
     @SerializedName("measure")
     private String measure;
@@ -20,13 +20,13 @@ public class County extends BaseModel {
     private String countyName;
 
     @SerializedName("mappingDist")
-    private int mappingDist;
+    private String mappingDist;
 
     @SerializedName("indDescription")
     private String indDescription;
 
     @SerializedName("avgNumDen")
-    private float avgNumDen;
+    private String avgNumDen;
 
     @SerializedName("location")
     private String location;
@@ -35,13 +35,13 @@ public class County extends BaseModel {
     private String diseaseDescription;
 
     @SerializedName("eventCount")
-    private float eventCount;
+    private String eventCount;
 
-    public int getPercent() {
+    public String getPercent() {
         return percent;
     }
 
-    public void setPercent(int percent) {
+    public void setPercent(String percent) {
         this.percent = percent;
     }
 
@@ -61,11 +61,11 @@ public class County extends BaseModel {
         this.countyName = countyName;
     }
 
-    public int getMappingDist() {
+    public String getMappingDist() {
         return mappingDist;
     }
 
-    public void setMappingDist(int mappingDist) {
+    public void setMappingDist(String mappingDist) {
         this.mappingDist = mappingDist;
     }
 
@@ -77,11 +77,11 @@ public class County extends BaseModel {
         this.indDescription = indDescription;
     }
 
-    public float getAvgNumDen() {
+    public String getAvgNumDen() {
         return avgNumDen;
     }
 
-    public void setAvgNumDen(float avgNumDen) {
+    public void setAvgNumDen(String avgNumDen) {
         this.avgNumDen = avgNumDen;
     }
 
@@ -101,11 +101,11 @@ public class County extends BaseModel {
         this.diseaseDescription = diseaseDescription;
     }
 
-    public float getEventCount() {
+    public String getEventCount() {
         return eventCount;
     }
 
-    public void setEventCount(float eventCount) {
+    public void setEventCount(String eventCount) {
         this.eventCount = eventCount;
     }
 }

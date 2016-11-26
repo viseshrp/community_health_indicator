@@ -19,12 +19,12 @@ import java.nio.charset.Charset;
 
 public class getDiseaseListApi extends AppRequest<DiseaseList> {
 
-    public getDiseaseListApi(String mapped_county, Response.Listener<DiseaseList> listener, Response.ErrorListener errorListener) {
-        super(Method.GET, "http://172.73.154.11:8080/countyname/" + mapped_county + "/", listener, errorListener);
+    public getDiseaseListApi(String mapped_county_id, Response.Listener<DiseaseList> listener, Response.ErrorListener errorListener) {
+        super(Method.GET, "http://172.73.154.11:8080/countyname/" + mapped_county_id + "/", listener, errorListener);
         setShouldCache(false);
         setPriority(Priority.IMMEDIATE);
 
-        setHttpParams("mapped_county", mapped_county);
+        setHttpParams("mapped_county", mapped_county_id);
     }
 
     @Override
