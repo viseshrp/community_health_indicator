@@ -44,7 +44,7 @@
             android:textColor="@android:color/black" />
     </RelativeLayout>
 
-    <android.support.v7.widget.RecyclerView
+    <com.ssdifall2016.communityhealthindicator.ui.views.MyRecyclerView
         android:id="@+id/disease_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

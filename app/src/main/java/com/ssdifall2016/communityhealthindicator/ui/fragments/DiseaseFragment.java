@@ -30,6 +30,7 @@ import com.ssdifall2016.communityhealthindicator.models.DiseaseName;
 import com.ssdifall2016.communityhealthindicator.models.DiseaseNameList;
 import com.ssdifall2016.communityhealthindicator.ui.activity.InfoActivity;
 import com.ssdifall2016.communityhealthindicator.ui.activity.MainActivity;
+import com.ssdifall2016.communityhealthindicator.ui.views.MyRecyclerView;
 import com.ssdifall2016.communityhealthindicator.utils.AppConstants;
 import com.ssdifall2016.communityhealthindicator.utils.MsgUtils;
 import com.ssdifall2016.communityhealthindicator.utils.NetworkUtil;
@@ -43,7 +44,7 @@ import butterknife.ButterKnife;
 public class DiseaseFragment extends Fragment {
 
     @BindView(R.id.county_list)
-    RecyclerView mCountyListRV;
+    MyRecyclerView mCountyListRV;
 
     @BindView(R.id.emptyListLayout)
     RelativeLayout mEmptyListLayout;
