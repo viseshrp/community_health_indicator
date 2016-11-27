@@ -368,10 +368,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                 public void onResponse(HealthOfficial response) {
                                     if (response != null) {
                                         //if (response.getStatus().equals(AppConstants.SUCCESS)) {
-                                            isSuccess = true;
-                                            Log.e("success","success");
-                                            MsgUtils.displayToast(LoginActivity.this, "Welcome" + " " + response.getFirst_name());
-                                            saveData(response);
+                                        isSuccess = true;
+                                        Log.e("success", "success");
+                                        MsgUtils.displayToast(LoginActivity.this, "Welcome" + " " + response.getFirst_name());
+                                        saveData(response);
                                         /*} else {
                                             MsgUtils.displayToast(LoginActivity.this, response.getMessage());
                                         }*/
@@ -380,7 +380,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                             }, new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
-                                    Log.e("Error","response");
+                                    Log.e("Error", "response");
                                     MsgUtils.displayToast(LoginActivity.this, R.string.error_generic);
                                 }
                             });
@@ -424,8 +424,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     MsgUtils.displayToast(LoginActivity.this, "There was an error while logging you in.");
                 }
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+                MsgUtils.displayToast(LoginActivity.this, R.string.error_generic);
             }
         }
 

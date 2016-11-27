@@ -7,11 +7,22 @@
         android:id="@+id/no_internet_layout"
         layout="@layout/layout_no_internet" />
 
+    <!-- Login progress -->
+    <ProgressBar
+        android:id="@+id/county_progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
     <RelativeLayout
         android:id="@+id/emptyListLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:layout_gravity="center">
 
 <!--
         <ImageView

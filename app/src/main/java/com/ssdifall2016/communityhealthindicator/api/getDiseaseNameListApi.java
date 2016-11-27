@@ -1,5 +1,7 @@
 package com.ssdifall2016.communityhealthindicator.api;
 
+import android.util.Log;
+
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.error.AuthFailureError;
@@ -26,6 +28,7 @@ public class getDiseaseNameListApi extends AppRequest<DiseaseNameList> {
     @Override
     protected Response<DiseaseNameList> parseNetworkResponse(NetworkResponse response) {
         if (response.statusCode == 200) {
+            Log.e("response.data", new String(response.data, Charset.forName("UTF-8")));
             DiseaseNameList diseaseNameList = new DiseaseNameListParser(new String(response.data, Charset.forName("UTF-8"))).getParserResponse();
             return Response.success(diseaseNameList, null);
         } else if (response.statusCode == 401) {

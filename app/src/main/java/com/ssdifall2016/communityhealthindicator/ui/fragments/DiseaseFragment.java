@@ -1,7 +1,13 @@
 package com.ssdifall2016.communityhealthindicator.ui.fragments;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,6 +26,8 @@ import com.ssdifall2016.communityhealthindicator.R;
 import com.ssdifall2016.communityhealthindicator.adapters.CountySelectorAdapter;
 import com.ssdifall2016.communityhealthindicator.models.CountyName;
 import com.ssdifall2016.communityhealthindicator.models.CountyNameList;
+import com.ssdifall2016.communityhealthindicator.models.DiseaseName;
+import com.ssdifall2016.communityhealthindicator.models.DiseaseNameList;
 import com.ssdifall2016.communityhealthindicator.ui.activity.InfoActivity;
 import com.ssdifall2016.communityhealthindicator.ui.activity.MainActivity;
 import com.ssdifall2016.communityhealthindicator.utils.AppConstants;
@@ -43,7 +51,15 @@ public class DiseaseFragment extends Fragment {
     @BindView(R.id.no_internet_layout)
     RelativeLayout mNoInternetLayout;
 
+    @BindView(R.id.disease_progress)
+    View mProgressView;
+
     private String mappedDiseaseId;
+
+    private DownloadCountyTask downloadCountyTask = null;
+
+    private boolean isSuccess;
+    private int numberOfRetries = -1;
 
     private CountySelectorAdapter countySelectorAdapter;
 
@@ -53,26 +69,12 @@ public class DiseaseFragment extends Fragment {
 
     public static DiseaseFragment newInstance() {
         DiseaseFragment fragment = new DiseaseFragment();
-/*
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-*/
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mappedDiseaseId = PreferencesUtils.getString(getActivity(), AppConstants.MAPPED_DISEASE_ID, ""); //// TODO: 11/24/16 change later
-
-/*
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-*/
     }
 
     @Override
@@ -81,7 +83,7 @@ public class DiseaseFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_disease, container, false);
         ButterKnife.bind(this, rootView);
         setupListView();
-        downLoadCountyList();
+        //downLoadCountyList();
         return rootView;
     }
 
@@ -101,33 +103,57 @@ public class DiseaseFragment extends Fragment {
     }
 
     private void downLoadCountyList() {
-        if (NetworkUtil.getConnectivityStatusString(getActivity())) {
-            enableNoInternetView(false);
-            ((MainActivity) getActivity()).showProgressDialog(getString(R.string.progress_dialog_loading_text), true);
-            CHIApp.get().getmChiApi().getCountyNameListApi(mappedDiseaseId, new Response.Listener<CountyNameList>() {
-                @Override
-                public void onResponse(CountyNameList response) {
-                    Log.e("downloadcounty", "Success");
+        if (downloadCountyTask != null) {
+            return;
+        }
 
-                    if (((getActivity()) != null))
-                        ((MainActivity) getActivity()).dismissProgressDialog();
-                    if (response != null && response.getCountyNameList() != null && !response.getCountyNameList().isEmpty()) {
-                        showEmptyList(false);
-                        setDataset(response.getCountyNameList());
-                    } else {
-                        showEmptyList(true);
+        Activity activity = getActivity();
+
+        if (activity != null && isAdded()) {
+
+            mappedDiseaseId = PreferencesUtils.getString(activity, AppConstants.MAPPED_DISEASE_ID, ""); //// TODO: 11/24/16 change later
+
+            showProgress(true);
+
+            downloadCountyTask = new DownloadCountyTask(getActivity(), mappedDiseaseId);
+            downloadCountyTask.execute((Void) null);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    private void showProgress(final boolean show) {
+        Activity activity = getActivity();
+
+        if (activity != null && isAdded()) {
+            // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+            // for very easy animations. If available, use these APIs to fade-in
+            // the progress spinner.
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+                int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+                mCountyListRV.setVisibility(show ? View.GONE : View.VISIBLE);
+                mCountyListRV.animate().setDuration(shortAnimTime).alpha(
+                        show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        mCountyListRV.setVisibility(show ? View.GONE : View.VISIBLE);
                     }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    ((MainActivity) getActivity()).dismissProgressDialog();
-                    showEmptyList(true);
-                }
-            });
-        } else {
-            enableNoInternetView(true);
-            MsgUtils.displayToast(getActivity(), R.string.error_internet_unavailable);
+                });
+
+                mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                mProgressView.animate().setDuration(shortAnimTime).alpha(
+                        show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                    }
+                });
+            } else {
+                // The ViewPropertyAnimator APIs are not available, so simply show
+                // and hide the relevant UI components.
+                mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                mCountyListRV.setVisibility(show ? View.GONE : View.VISIBLE);
+            }
         }
     }
 
@@ -145,6 +171,7 @@ public class DiseaseFragment extends Fragment {
         }
     }
 
+    /*
     private void enableNoInternetView(boolean value) {
         if (mNoInternetLayout != null && mCountyListRV != null) {
             if (value) {
@@ -156,11 +183,7 @@ public class DiseaseFragment extends Fragment {
             }
         }
     }
-
-    private void setDataset(ArrayList<CountyName> countyNames) {
-        countySelectorAdapter.setDataset(countyNames);
-        countySelectorAdapter.notifyDataSetChanged();
-    }
+*/
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -190,4 +213,85 @@ public class DiseaseFragment extends Fragment {
         downLoadCountyList();
     }
 
+    public class DownloadCountyTask extends AsyncTask<Void, Void, Boolean> {
+
+        private final String mappedCountyId;
+        private Context context;
+
+        DownloadCountyTask(Context context, String mappedCountyId) {
+            this.context = context;
+            this.mappedCountyId = mappedCountyId;
+        }
+
+        private void setDataset(ArrayList<CountyName> countyNames) {
+            countySelectorAdapter.setDataset(countyNames);
+            countySelectorAdapter.notifyDataSetChanged();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+
+            isSuccess = false;
+            try {
+
+                if (NetworkUtil.getConnectivityStatusString(context)) {
+                    //enableNoInternetView(false);
+                    CHIApp.get().getmChiApi().getCountyNameListApi(mappedDiseaseId, new Response.Listener<CountyNameList>() {
+                        @Override
+                        public void onResponse(CountyNameList response) {
+                            if (response != null && response.getCountyNameList() != null && !response.getCountyNameList().isEmpty()) {
+                                isSuccess = true;
+                                setDataset(response.getCountyNameList());
+                            } else {
+                                isSuccess = false;
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            if (numberOfRetries < 4) {
+                                downLoadCountyList();
+                                numberOfRetries += 1;
+                            } else {
+                                showProgress(false);
+                                MsgUtils.displayToast(context, R.string.error_generic);
+                                isSuccess = false;
+                            }
+                        }
+                    });
+                } else {
+                    isSuccess = false;
+                    MsgUtils.displayToast(context, R.string.error_internet_unavailable);
+                }
+
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                return false;
+            }
+            return isSuccess;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            downloadCountyTask = null;
+            showProgress(false);
+
+            if (!success) {
+                if (numberOfRetries < 4) {
+                    downLoadCountyList();
+                    numberOfRetries += 1;
+                } else {
+                    showEmptyList(true);
+                    MsgUtils.displayToast(context, R.string.error_generic);
+                }
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            downloadCountyTask = null;
+            numberOfRetries = -1;
+            showProgress(false);
+        }
+    }
 }

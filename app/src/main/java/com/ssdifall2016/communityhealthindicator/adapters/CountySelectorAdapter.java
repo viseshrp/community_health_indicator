@@ -3,6 +3,7 @@ package com.ssdifall2016.communityhealthindicator.adapters;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +47,7 @@ public class CountySelectorAdapter extends RecyclerView.Adapter<CountySelectorAd
         final CountyName countyName = mCountyNameList.get(position);
 
         holder.titleText.setText(countyName.getCountyName());
+
         holder.wrapLayout.setId(position);
         holder.wrapLayout.setOnClickListener(new View.OnClickListener() {
             @Override
