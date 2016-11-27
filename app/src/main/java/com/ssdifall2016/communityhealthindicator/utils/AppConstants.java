@@ -25,8 +25,8 @@ public class AppConstants {
     public static final String SUCCESS = "success";
     public static final String ERROR = "error";
 
-    public static final String SELECTED_DISEASE = "selected_disease";
-    public static final String SELECTED_COUNTY = "selected_county";
+    public static final String SELECTED_DISEASE_ID = "selected_disease_id";
+    public static final String SELECTED_COUNTY_ID = "selected_county_id";
 
     public static final String IS_LOGGED_IN = "is_logged_in";
 

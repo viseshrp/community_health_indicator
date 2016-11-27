@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +18,8 @@ import com.android.volley.error.VolleyError;
 import com.ssdifall2016.communityhealthindicator.CHIApp;
 import com.ssdifall2016.communityhealthindicator.R;
 import com.ssdifall2016.communityhealthindicator.adapters.DiseaseSelectorAdapter;
-import com.ssdifall2016.communityhealthindicator.models.Disease;
-import com.ssdifall2016.communityhealthindicator.models.DiseaseList;
+import com.ssdifall2016.communityhealthindicator.models.DiseaseName;
+import com.ssdifall2016.communityhealthindicator.models.DiseaseNameList;
 import com.ssdifall2016.communityhealthindicator.ui.activity.InfoActivity;
 import com.ssdifall2016.communityhealthindicator.ui.activity.MainActivity;
 import com.ssdifall2016.communityhealthindicator.utils.AppConstants;
@@ -90,9 +91,9 @@ public class CountyFragment extends Fragment {
         mDiseaseListRV.setLayoutManager(mLayoutManger);
         diseaseSelectorAdapter = new DiseaseSelectorAdapter(getActivity(), new DiseaseSelectorAdapter.DiseaseTapListener() {
             @Override
-            public void onTap(Disease disease) {
+            public void onTap(DiseaseName diseaseName) {
                 Intent intent = new Intent(getActivity(), InfoActivity.class);
-                intent.putExtra(AppConstants.SELECTED_DISEASE, disease.getDiseaseDescription());
+                intent.putExtra(AppConstants.SELECTED_DISEASE_ID, diseaseName.getDiseaseId());
                 startActivity(intent);
             }
         });
@@ -103,13 +104,15 @@ public class CountyFragment extends Fragment {
         if (NetworkUtil.getConnectivityStatusString(getActivity())) {
             enableNoInternetView(false);
             ((MainActivity) getActivity()).showProgressDialog(getString(R.string.progress_dialog_loading_text), true);
-            CHIApp.get().getmChiApi().getDiseaseListApi(mappedCountyId, new Response.Listener<DiseaseList>() {
+            CHIApp.get().getmChiApi().getDiseaseNameListApi(mappedCountyId, new Response.Listener<DiseaseNameList>() {
                 @Override
-                public void onResponse(DiseaseList response) {
-                    ((MainActivity) getActivity()).dismissProgressDialog();
-                    if (response != null && response.getDiseaseList() != null && !response.getDiseaseList().isEmpty()) {
+                public void onResponse(DiseaseNameList response) {
+                    Log.e("downloaddisease", "Success");
+                    if (((getActivity()) != null))
+                        ((MainActivity) getActivity()).dismissProgressDialog();
+                    if (response != null && response.getDiseaseNameList() != null && !response.getDiseaseNameList().isEmpty()) {
                         showEmptyList(false);
-                        setDataset(response.getDiseaseList());
+                        setDataset(response.getDiseaseNameList());
                     } else {
                         showEmptyList(true);
 
@@ -154,8 +157,8 @@ public class CountyFragment extends Fragment {
         }
     }
 
-    private void setDataset(ArrayList<Disease> diseaseList) {
-        diseaseSelectorAdapter.setDataset(diseaseList);
+    private void setDataset(ArrayList<DiseaseName> diseaseNameList) {
+        diseaseSelectorAdapter.setDataset(diseaseNameList);
         diseaseSelectorAdapter.notifyDataSetChanged();
     }
 
@@ -183,5 +186,12 @@ public class CountyFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mappedCountyId = PreferencesUtils.getString(getActivity(), AppConstants.MAPPED_COUNTY_ID, ""); //// TODO: 11/24/16 change to null later
+        downLoadDiseaseList();
     }
 }

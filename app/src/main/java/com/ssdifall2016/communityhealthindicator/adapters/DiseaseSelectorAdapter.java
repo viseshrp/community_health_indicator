@@ -6,11 +6,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ssdifall2016.communityhealthindicator.R;
 import com.ssdifall2016.communityhealthindicator.models.Disease;
+import com.ssdifall2016.communityhealthindicator.models.DiseaseName;
 
 import java.util.ArrayList;
 
@@ -21,17 +21,17 @@ import java.util.ArrayList;
 public class DiseaseSelectorAdapter extends RecyclerView.Adapter<DiseaseSelectorAdapter.ViewHolder> {
 
     private final DiseaseTapListener mDiseaseTapListener;
-    private ArrayList<Disease> mDiseaseList;
+    private ArrayList<DiseaseName> mDiseaseNameList;
     private Context mContext;
 
     public DiseaseSelectorAdapter(Context mContext, DiseaseTapListener listener) {
-        mDiseaseList = new ArrayList<>();
+        mDiseaseNameList = new ArrayList<>();
         mDiseaseTapListener = listener;
         this.mContext = mContext;
     }
 
-    public void setDataset(ArrayList<Disease> diseaseList) {
-        this.mDiseaseList = diseaseList;
+    public void setDataset(ArrayList<DiseaseName> diseaseNameList) {
+        this.mDiseaseNameList = diseaseNameList;
     }
 
     @Override
@@ -43,16 +43,16 @@ public class DiseaseSelectorAdapter extends RecyclerView.Adapter<DiseaseSelector
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        final Disease disease = mDiseaseList.get(position);
+        final DiseaseName diseaseName = mDiseaseNameList.get(position);
 
-        holder.titleText.setText(disease.getDiseaseDescription());
+        holder.titleText.setText(diseaseName.getDiseaseName());
         holder.wrapLayout.setId(position);
         holder.wrapLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if (mDiseaseTapListener != null) {
-                    mDiseaseTapListener.onTap(disease);
+                    mDiseaseTapListener.onTap(diseaseName);
                 }
             }
         });
@@ -62,11 +62,11 @@ public class DiseaseSelectorAdapter extends RecyclerView.Adapter<DiseaseSelector
 
     @Override
     public int getItemCount() {
-        return mDiseaseList.size();
+        return mDiseaseNameList.size();
     }
 
     public interface DiseaseTapListener {
-        void onTap(Disease disease);
+        void onTap(DiseaseName diseaseName);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

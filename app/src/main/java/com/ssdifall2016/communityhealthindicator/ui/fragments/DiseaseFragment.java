@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +18,8 @@ import com.android.volley.error.VolleyError;
 import com.ssdifall2016.communityhealthindicator.CHIApp;
 import com.ssdifall2016.communityhealthindicator.R;
 import com.ssdifall2016.communityhealthindicator.adapters.CountySelectorAdapter;
-import com.ssdifall2016.communityhealthindicator.models.County;
-import com.ssdifall2016.communityhealthindicator.models.CountyList;
+import com.ssdifall2016.communityhealthindicator.models.CountyName;
+import com.ssdifall2016.communityhealthindicator.models.CountyNameList;
 import com.ssdifall2016.communityhealthindicator.ui.activity.InfoActivity;
 import com.ssdifall2016.communityhealthindicator.ui.activity.MainActivity;
 import com.ssdifall2016.communityhealthindicator.utils.AppConstants;
@@ -90,9 +91,9 @@ public class DiseaseFragment extends Fragment {
         mCountyListRV.setLayoutManager(mLayoutManger);
         countySelectorAdapter = new CountySelectorAdapter(getActivity(), new CountySelectorAdapter.CountyTapListener() {
             @Override
-            public void onTap(County county) {
+            public void onTap(CountyName countyName) {
                 Intent intent = new Intent(getActivity(), InfoActivity.class);
-                intent.putExtra(AppConstants.SELECTED_COUNTY, county.getCountyName());
+                intent.putExtra(AppConstants.SELECTED_COUNTY_ID, countyName.getCountyId());
                 startActivity(intent);
             }
         });
@@ -103,13 +104,16 @@ public class DiseaseFragment extends Fragment {
         if (NetworkUtil.getConnectivityStatusString(getActivity())) {
             enableNoInternetView(false);
             ((MainActivity) getActivity()).showProgressDialog(getString(R.string.progress_dialog_loading_text), true);
-            CHIApp.get().getmChiApi().getCountyListApi(mappedDiseaseId, new Response.Listener<CountyList>() {
+            CHIApp.get().getmChiApi().getCountyNameListApi(mappedDiseaseId, new Response.Listener<CountyNameList>() {
                 @Override
-                public void onResponse(CountyList response) {
-                    ((MainActivity) getActivity()).dismissProgressDialog();
-                    if (response != null && response.getCountyList() != null && !response.getCountyList().isEmpty()) {
+                public void onResponse(CountyNameList response) {
+                    Log.e("downloadcounty", "Success");
+
+                    if (((getActivity()) != null))
+                        ((MainActivity) getActivity()).dismissProgressDialog();
+                    if (response != null && response.getCountyNameList() != null && !response.getCountyNameList().isEmpty()) {
                         showEmptyList(false);
-                        setDataset(response.getCountyList());
+                        setDataset(response.getCountyNameList());
                     } else {
                         showEmptyList(true);
                     }
@@ -153,8 +157,8 @@ public class DiseaseFragment extends Fragment {
         }
     }
 
-    private void setDataset(ArrayList<County> countyList) {
-        countySelectorAdapter.setDataset(countyList);
+    private void setDataset(ArrayList<CountyName> countyNames) {
+        countySelectorAdapter.setDataset(countyNames);
         countySelectorAdapter.notifyDataSetChanged();
     }
 
@@ -178,4 +182,12 @@ public class DiseaseFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mappedDiseaseId = PreferencesUtils.getString(getActivity(), AppConstants.MAPPED_DISEASE_ID, ""); //// TODO: 11/24/16 change later
+        downLoadCountyList();
+    }
+
 }

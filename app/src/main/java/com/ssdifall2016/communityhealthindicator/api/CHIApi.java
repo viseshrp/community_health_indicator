@@ -4,7 +4,9 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.ssdifall2016.communityhealthindicator.models.CountyList;
+import com.ssdifall2016.communityhealthindicator.models.CountyNameList;
 import com.ssdifall2016.communityhealthindicator.models.DiseaseList;
+import com.ssdifall2016.communityhealthindicator.models.DiseaseNameList;
 import com.ssdifall2016.communityhealthindicator.models.HealthOfficial;
 
 /**
@@ -29,8 +31,18 @@ public class CHIApi {
     }
 
     public Request<?> getDiseaseListApi(String mapped_county_id, Response.Listener<DiseaseList> listener,
-                            Response.ErrorListener errorListener) {
+                                        Response.ErrorListener errorListener) {
         return mRequestQueue.add(new getDiseaseListApi(mapped_county_id, listener, errorListener));
+    }
+
+    public Request<?> getCountyNameListApi(String mapped_disease_id, Response.Listener<CountyNameList> listener,
+                                           Response.ErrorListener errorListener) {
+        return mRequestQueue.add(new getCountyNameListApi(mapped_disease_id, listener, errorListener));
+    }
+
+    public Request<?> getDiseaseNameListApi(String mapped_county_id, Response.Listener<DiseaseNameList> listener,
+                                            Response.ErrorListener errorListener) {
+        return mRequestQueue.add(new getDiseaseNameListApi(mapped_county_id, listener, errorListener));
     }
 
 }

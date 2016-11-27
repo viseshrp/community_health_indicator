@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.ssdifall2016.communityhealthindicator.R;
 import com.ssdifall2016.communityhealthindicator.models.County;
+import com.ssdifall2016.communityhealthindicator.models.CountyName;
 
 import java.util.ArrayList;
 
@@ -20,17 +21,17 @@ import java.util.ArrayList;
 public class CountySelectorAdapter extends RecyclerView.Adapter<CountySelectorAdapter.ViewHolder> {
 
     private final CountySelectorAdapter.CountyTapListener mCountyTapListener;
-    private ArrayList<County> mCountyList;
+    private ArrayList<CountyName> mCountyNameList;
     private Context mContext;
 
     public CountySelectorAdapter(Context mContext, CountyTapListener listener) {
-        mCountyList = new ArrayList<>();
+        mCountyNameList = new ArrayList<>();
         mCountyTapListener = listener;
         this.mContext = mContext;
     }
 
-    public void setDataset(ArrayList<County> countyList) {
-        this.mCountyList = countyList;
+    public void setDataset(ArrayList<CountyName> countyNameList) {
+        this.mCountyNameList = countyNameList;
     }
 
     @Override
@@ -42,16 +43,16 @@ public class CountySelectorAdapter extends RecyclerView.Adapter<CountySelectorAd
     @Override
     public void onBindViewHolder(final CountySelectorAdapter.ViewHolder holder, final int position) {
 
-        final County county = mCountyList.get(position);
+        final CountyName countyName = mCountyNameList.get(position);
 
-        holder.titleText.setText(county.getCountyName());
+        holder.titleText.setText(countyName.getCountyName());
         holder.wrapLayout.setId(position);
         holder.wrapLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if (mCountyTapListener != null) {
-                    mCountyTapListener.onTap(county);
+                    mCountyTapListener.onTap(countyName);
                 }
             }
         });
@@ -59,11 +60,11 @@ public class CountySelectorAdapter extends RecyclerView.Adapter<CountySelectorAd
 
     @Override
     public int getItemCount() {
-        return mCountyList.size();
+        return mCountyNameList.size();
     }
 
     public interface CountyTapListener {
-        void onTap(County county);
+        void onTap(CountyName countyName);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
