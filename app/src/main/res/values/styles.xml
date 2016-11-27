@@ -32,7 +32,6 @@
     <style name="TopicTextStyle" parent="@android:style/TextAppearance.Medium">
         <item name="android:shadowRadius">1</item>
         <item name="android:textColor">@android:color/darker_gray</item>
-        <item name="android:textStyle">bold</item>
         <item name="android:textSize">16sp</item>
     </style>
 
