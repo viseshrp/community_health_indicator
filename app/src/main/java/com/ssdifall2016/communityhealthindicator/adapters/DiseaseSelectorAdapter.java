@@ -46,7 +46,10 @@ public class DiseaseSelectorAdapter extends RecyclerView.Adapter<DiseaseSelector
 
         final DiseaseName diseaseName = mDiseaseNameList.get(position);
 
-        holder.titleText.setText(diseaseName.getDiseaseName());
+        if (diseaseName.getDiseaseName().equals("\"Tobacco"))
+            holder.titleText.setText("Tobacco");
+        else
+            holder.titleText.setText(diseaseName.getDiseaseName());
 
         holder.wrapLayout.setId(position);
         holder.wrapLayout.setOnClickListener(new View.OnClickListener() {

@@ -15,6 +15,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -76,6 +79,7 @@ public class DiseaseFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -88,19 +92,51 @@ public class DiseaseFragment extends Fragment {
         return rootView;
     }
 
-    private void setupListView() {
-        mCountyListRV.setHasFixedSize(true);
-        RecyclerView.LayoutManager mLayoutManger = new LinearLayoutManager(getActivity());
-        mCountyListRV.setLayoutManager(mLayoutManger);
-        countySelectorAdapter = new CountySelectorAdapter(getActivity(), new CountySelectorAdapter.CountyTapListener() {
-            @Override
-            public void onTap(CountyName countyName) {
-                Intent intent = new Intent(getActivity(), InfoActivity.class);
-                intent.putExtra(AppConstants.SELECTED_COUNTY_ID, countyName.getCountyId());
-                startActivity(intent);
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_disease, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_refresh) {
+            Activity activity = getActivity();
+
+            if (activity != null && isAdded()) {
+
+                mappedDiseaseId = PreferencesUtils.getString(getActivity(), AppConstants.MAPPED_DISEASE_ID, ""); //// TODO: 11/24/16 change later
+                downLoadCountyList();
             }
-        });
-        mCountyListRV.setAdapter(countySelectorAdapter);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void setupListView() {
+        Activity activity = getActivity();
+
+        if (activity != null && isAdded()) {
+
+            mCountyListRV.setHasFixedSize(true);
+            RecyclerView.LayoutManager mLayoutManger = new LinearLayoutManager(getActivity());
+            mCountyListRV.setLayoutManager(mLayoutManger);
+            countySelectorAdapter = new CountySelectorAdapter(getActivity(), new CountySelectorAdapter.CountyTapListener() {
+                @Override
+                public void onTap(CountyName countyName) {
+                    Intent intent = new Intent(getActivity(), InfoActivity.class);
+                    intent.putExtra(AppConstants.SELECTED_COUNTY_ID, countyName.getCountyId());
+                    startActivity(intent);
+                }
+            });
+            mCountyListRV.setAdapter(countySelectorAdapter);
+        }
     }
 
     private void downLoadCountyList() {
@@ -210,8 +246,13 @@ public class DiseaseFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        mappedDiseaseId = PreferencesUtils.getString(getActivity(), AppConstants.MAPPED_DISEASE_ID, ""); //// TODO: 11/24/16 change later
-        downLoadCountyList();
+        Activity activity = getActivity();
+
+        if (activity != null && isAdded()) {
+
+            mappedDiseaseId = PreferencesUtils.getString(getActivity(), AppConstants.MAPPED_DISEASE_ID, ""); //// TODO: 11/24/16 change later
+            downLoadCountyList();
+        }
     }
 
     public class DownloadCountyTask extends AsyncTask<Void, Void, Boolean> {
